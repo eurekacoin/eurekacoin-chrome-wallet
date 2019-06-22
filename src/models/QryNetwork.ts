@@ -1,4 +1,4 @@
-import { Network as QjswNetwork } from 'qtumjs-wallet';
+import { Network as QjswNetwork } from 'eurekacoinjs-wallet';
 
 export default class QryNetwork {
   public name: string;

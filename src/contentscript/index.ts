@@ -10,22 +10,22 @@ let port: any;
 // Add message listeners
 window.addEventListener('message', handleInPageMessage, false);
 chrome.runtime.onMessage.addListener(handleBackgroundScriptMessage);
-// Dapp developer triggers this event to set up window.qrypto
+// Dapp developer triggers this event to set up window.eurekalite
 window.addEventListener('message', setupLongLivedConnection, false);
 
 // Create a long-lived connection to the background page and inject content scripts
 async function setupLongLivedConnection(event: MessageEvent) {
-  if (event.data.message && event.data.message.type === API_TYPE.CONNECT_INPAGE_QRYPTO) {
+  if (event.data.message && event.data.message.type === API_TYPE.CONNECT_INPAGE_EUREKALITE) {
     // Inject scripts
     await injectAllScripts();
 
     // Setup port
     port = chrome.runtime.connect({ name: PORT_NAME.CONTENTSCRIPT });
     port.onMessage.addListener((msg: any) => {
-      if (msg.type === MESSAGE_TYPE.SEND_INPAGE_QRYPTO_ACCOUNT_VALUES) {
+      if (msg.type === MESSAGE_TYPE.SEND_INPAGE_EUREKALITE_ACCOUNT_VALUES) {
         // content script -> inpage and/or Dapp event listener
         postWindowMessage(TARGET_NAME.INPAGE, {
-          type: API_TYPE.SEND_INPAGE_QRYPTO_ACCOUNT_VALUES,
+          type: API_TYPE.SEND_INPAGE_EUREKALITE_ACCOUNT_VALUES,
           payload: msg.accountWrapper,
         });
       }
@@ -42,7 +42,7 @@ async function setupLongLivedConnection(event: MessageEvent) {
 
     // request inpageAccount values from bg script
     postWindowMessage(TARGET_NAME.CONTENTSCRIPT, {
-      type: API_TYPE.GET_INPAGE_QRYPTO_ACCOUNT_VALUES,
+      type: API_TYPE.GET_INPAGE_EUREKALITE_ACCOUNT_VALUES,
       payload: {},
     });
   }
@@ -50,12 +50,12 @@ async function setupLongLivedConnection(event: MessageEvent) {
 
 /*
 * This only partially resets the webpage to its pre-connected state. We remove the
-* event listeners and set window.qrypto back to undefined, but there is no
+* event listeners and set window.eurekalite back to undefined, but there is no
 * way to uninject the content scripts. This is not a big deal though as without a
-* Qrypto installation, the content scripts won't do anything (neither will the
+* EurekaLite installation, the content scripts won't do anything (neither will the
 * event listeners, but we can remove them so we may as well).
-* And as long as the dapp implements the handleQryptoInstalledOrUpdated event
-* listener, the page will be refreshed if Qrypto is reinstalled.
+* And as long as the dapp implements the handleEurekaLiteInstalledOrUpdated event
+* listener, the page will be refreshed if EurekaLite is reinstalled.
 */
 function handlePortDisconnected() {
   window.removeEventListener('message', handleInPageMessage, false);
@@ -78,7 +78,7 @@ function handleRPCRequest(message: IRPCCallRequest) {
         type: API_TYPE.RPC_RESPONSE,
         payload: {
           id,
-          error: 'Not logged in. Please log in to Qrypto first.',
+          error: 'Not logged in. Please log in to EurekaLite first.',
         },
       });
       return;
@@ -107,7 +107,7 @@ function handleRPCRequest(message: IRPCCallRequest) {
 
 // Forwards the request to the bg script
 function forwardInpageAccountRequest() {
-  port.postMessage({ type: MESSAGE_TYPE.GET_INPAGE_QRYPTO_ACCOUNT_VALUES });
+  port.postMessage({ type: MESSAGE_TYPE.GET_INPAGE_EUREKALITE_ACCOUNT_VALUES });
 }
 
 // Handle messages sent from inpage -> content script(here) -> bg script
@@ -121,7 +121,7 @@ function handleInPageMessage(event: MessageEvent) {
     case API_TYPE.RPC_REQUEST:
       handleRPCRequest(message.payload);
       break;
-    case API_TYPE.GET_INPAGE_QRYPTO_ACCOUNT_VALUES:
+    case API_TYPE.GET_INPAGE_EUREKALITE_ACCOUNT_VALUES:
       forwardInpageAccountRequest();
       break;
     default:

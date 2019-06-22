@@ -33,13 +33,13 @@ class SendConfirm extends Component<WithStyles & IProps, {}> {
               <AddressField fieldName={'To'} address={receiverAddress} {...this.props} />
             </div>
             <CostField fieldName={'Amount'} amount={amount} unit={token!.symbol} {...this.props} />
-            {this.props.store.sendStore.token && this.props.store.sendStore.token.symbol === 'QTUM' ? (
+            {this.props.store.sendStore.token && this.props.store.sendStore.token.symbol === 'EUREKACOIN' ? (
               <CostField fieldName={'Transaction Speed'} amount={transactionSpeed} unit={''} {...this.props} />
             ) : (
               <div>
                 <CostField fieldName={'Gas Limit'} amount={gasLimit} unit={'GAS'} {...this.props} />
                 <CostField fieldName={'Gas Price'} amount={gasPrice} unit={'SATOSHI/GAS'} {...this.props} />
-                <CostField fieldName={'Max Transaction Fee'} amount={maxTxFee} unit={'QTUM'} {...this.props} />
+                <CostField fieldName={'Max Transaction Fee'} amount={maxTxFee} unit={'EUREKACOIN'} {...this.props} />
               </div>
             )}
           </div>

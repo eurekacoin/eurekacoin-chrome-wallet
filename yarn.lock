@@ -4130,22 +4130,22 @@ qs@~6.5.1:
   version "6.5.2"
   resolved "http://registry.npm.taobao.org/qs/download/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
 
-qtum-opcodes@^1.0.0:
+eurekacoin-opcodes@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/qtum-opcodes/-/qtum-opcodes-1.0.0.tgz#2353d3647f0ec6283763338d52464c072f83f53f"
+  resolved "https://registry.yarnpkg.com/eurekacoin-opcodes/-/eurekacoin-opcodes-1.0.0.tgz#2353d3647f0ec6283763338d52464c072f83f53f"
 
-qtumjs-lib@^0.0.6:
+eurekacoinjs-lib@^0.0.6:
   version "0.0.6"
-  resolved "https://registry.yarnpkg.com/qtumjs-lib/-/qtumjs-lib-0.0.6.tgz#d57f76b9fc3c4a1b01ad1986716ff73f86d1ce8d"
+  resolved "https://registry.yarnpkg.com/eurekacoinjs-lib/-/eurekacoinjs-lib-0.0.6.tgz#d57f76b9fc3c4a1b01ad1986716ff73f86d1ce8d"
   dependencies:
     bignumber.js "^4.1.0"
     bitcoinjs-lib "^3.3.2"
-    qtum-opcodes "^1.0.0"
+    eurekacoin-opcodes "^1.0.0"
     safe-buffer "^5.1.1"
 
-qtumjs-wallet@^0.0.9:
+eurekacoinjs-wallet@^0.0.9:
   version "0.0.9"
-  resolved "http://registry.npm.taobao.org/qtumjs-wallet/download/qtumjs-wallet-0.0.9.tgz#37472270493d3bbed039f3a9b16484e5b12dcf61"
+  resolved "http://registry.npm.taobao.org/eurekacoinjs-wallet/download/eurekacoinjs-wallet-0.0.9.tgz#37472270493d3bbed039f3a9b16484e5b12dcf61"
   dependencies:
     "@types/bip38" "^2.0.0"
     axios "^0.17.1"
@@ -4154,7 +4154,7 @@ qtumjs-wallet@^0.0.9:
     bip39 "^2.5.0"
     buffer "^5.1.0"
     coinselect "^3.1.11"
-    qtumjs-lib "^0.0.6"
+    eurekacoinjs-lib "^0.0.6"
     safe-buffer "^5.1.1"
     varuint-bitcoin "^1.1.0"
 

@@ -1,18 +1,18 @@
-import QryptoController from '.';
+import EurekaLiteController from '.';
 import IController from './iController';
 
 export default class OnInstallController extends IController {
-  constructor(main: QryptoController) {
+  constructor(main: EurekaLiteController) {
     super('onInstall', main);
 
     /*
     * When the extension is installed or updated, refresh the tabs of all
-    * dapp apps using Qrypto. We want to refresh these tabs so that they can
+    * dapp apps using EurekaLite. We want to refresh these tabs so that they can
     * have a clean slate for adding event listeners and injecting scripts,
     * and so that we do not have any dangling/duplicate event listeners or
-    * injected scripts from prior versions of Qrypto.
+    * injected scripts from prior versions of EurekaLite.
     * To get refreshed, dapp tabs must implement the
-    * handleQryptoInstallOrUpdate event listener described in the Readme.
+    * handleEurekaLiteInstallOrUpdate event listener described in the Readme.
     */
     chrome.runtime.onInstalled.addListener((details) => {
       if (details.reason === 'install' || details.reason === 'update') {
@@ -42,11 +42,11 @@ export default class OnInstallController extends IController {
   }
 
   private refreshTab(tab: chrome.tabs.Tab) {
-     // Tells the content script to post a msg to the inpage window letting it know that Qrypto was installed or updated.
+     // Tells the content script to post a msg to the inpage window letting it know that EurekaLite was installed or updated.
      chrome.tabs.executeScript(tab.id!, {code:
       `window.postMessage(
         {
-          message: { type: 'QRYPTO_INSTALLED_OR_UPDATED' }
+          message: { type: 'EUREKALITE_INSTALLED_OR_UPDATED' }
         },
         '*'
       )`,

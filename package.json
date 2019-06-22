@@ -1,5 +1,5 @@
 {
-  "name": "qrypto",
+  "name": "eurekalite",
   "private": true,
   "scripts": {
     "clean": "rm -rf dist",
@@ -71,8 +71,8 @@
     "mobx-react-router": "^4.0.4",
     "moment": "^2.22.2",
     "qrcode.react": "^0.8.0",
-    "qtumjs-wallet": "^0.2.1",
-    "qweb3": "^1.1.0",
+    "eurekacoinjs-wallet": "^0.2.1",
+    "eweb3": "^1.1.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "secp256k1": "^3.5.0",

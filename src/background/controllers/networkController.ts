@@ -1,14 +1,14 @@
-import { networks, Network } from 'qtumjs-wallet';
+import { networks, Network } from 'eurekacoinjs-wallet';
 
-import QryptoController from '.';
+import EurekaLiteController from '.';
 import IController from './iController';
 import { MESSAGE_TYPE, STORAGE, NETWORK_NAMES } from '../../constants';
 import QryNetwork from '../../models/QryNetwork';
 
 export default class NetworkController extends IController {
   public static NETWORKS: QryNetwork[] = [
-    new QryNetwork(NETWORK_NAMES.MAINNET, networks.mainnet, 'https://explorer.qtum.org/tx'),
-    new QryNetwork(NETWORK_NAMES.TESTNET, networks.testnet, 'https://testnet.qtum.org/tx'),
+    new QryNetwork(NETWORK_NAMES.MAINNET, networks.mainnet, 'https://explorer.eurekacoin.org/tx'),
+    new QryNetwork(NETWORK_NAMES.TESTNET, networks.testnet, 'https://testnet.eurekacoin.org/tx'),
     new QryNetwork(NETWORK_NAMES.REGTEST, networks.regtest, 'http://localhost:3001/explorer/tx'),
   ];
 
@@ -27,7 +27,7 @@ export default class NetworkController extends IController {
 
   private networkIndex: number = 0;
 
-  constructor(main: QryptoController) {
+  constructor(main: EurekaLiteController) {
     super('network', main);
 
     chrome.runtime.onMessage.addListener(this.handleMessage);

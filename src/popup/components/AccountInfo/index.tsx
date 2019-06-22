@@ -28,7 +28,7 @@ class AccountInfo extends Component<WithStyles & IProps, {}> {
 
   public render() {
     const { classes, hasRightArrow } = this.props;
-    const { loggedInAccountName, info, qtumBalanceUSD, networkBalAnnotation } = this.props.store!.sessionStore;
+    const { loggedInAccountName, info, eurekacoinBalanceUSD, networkBalAnnotation } = this.props.store!.sessionStore;
 
     if (!loggedInAccountName || !info) {
       return null;
@@ -40,10 +40,10 @@ class AccountInfo extends Component<WithStyles & IProps, {}> {
         <Typography className={classes.address}>{info.addrStr}</Typography>
         <div className={classes.amountContainer}>
           <Typography className={classes.tokenAmount}>{info.balance}</Typography>
-          <Typography className={classes.token}>QTUM</Typography>
+          <Typography className={classes.token}>EUREKACOIN</Typography>
           {hasRightArrow && <KeyboardArrowRight className={classes.rightArrow} />}
         </div>
-        <Typography className={classes.balanceUSD}>{`${qtumBalanceUSD} ${networkBalAnnotation}`}</Typography>
+        <Typography className={classes.balanceUSD}>{`${eurekacoinBalanceUSD} ${networkBalAnnotation}`}</Typography>
         <div className={classes.actionButtonsContainer}>
           <Button
             id="sendButton"

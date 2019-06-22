@@ -1,37 +1,37 @@
 import axios from 'axios';
 
-import QryptoController from '.';
+import EurekaLiteController from '.';
 import IController from './iController';
 import { MESSAGE_TYPE } from '../../constants';
 
 const INIT_VALUES = {
   getPriceInterval: undefined,
-  qtumPriceUSD: 0,
+  eurekacoinPriceUSD: 0,
 };
 
 export default class ExternalController extends IController {
   private static GET_PRICE_INTERVAL_MS: number = 60000;
 
   private getPriceInterval?: number = INIT_VALUES.getPriceInterval;
-  private qtumPriceUSD: number = INIT_VALUES.qtumPriceUSD;
+  private eurekacoinPriceUSD: number = INIT_VALUES.eurekacoinPriceUSD;
 
-  constructor(main: QryptoController) {
+  constructor(main: EurekaLiteController) {
     super('external', main);
     this.initFinished();
   }
 
-  public calculateQtumToUSD = (balance: number): number => {
-    return this.qtumPriceUSD ? Number((this.qtumPriceUSD * balance).toFixed(2)) : 0;
+  public calculateEurekaCoinToUSD = (balance: number): number => {
+    return this.eurekacoinPriceUSD ? Number((this.eurekacoinPriceUSD * balance).toFixed(2)) : 0;
   }
 
   /*
   * Starts polling for periodic info updates.
   */
   public startPolling = async () => {
-    await this.getQtumPrice();
+    await this.getEurekaCoinPrice();
     if (!this.getPriceInterval) {
       this.getPriceInterval = window.setInterval(() => {
-        this.getQtumPrice();
+        this.getEurekaCoinPrice();
       }, ExternalController.GET_PRICE_INTERVAL_MS);
     }
   }
@@ -47,23 +47,23 @@ export default class ExternalController extends IController {
   }
 
   /*
-  * Gets the current Qtum market price.
+  * Gets the current EurekaCoin market price.
   */
-  private getQtumPrice = async () => {
+  private getEurekaCoinPrice = async () => {
     try {
       const jsonObj = await axios.get('https://api.coinmarketcap.com/v2/ticker/1684/');
-      this.qtumPriceUSD = jsonObj.data.data.quotes.USD.price;
+      this.eurekacoinPriceUSD = jsonObj.data.data.quotes.USD.price;
 
       if (this.main.account.loggedInAccount
         && this.main.account.loggedInAccount.wallet
         && this.main.account.loggedInAccount.wallet.info
       ) {
-        const qtumUSD = this.calculateQtumToUSD(this.main.account.loggedInAccount.wallet.info.balance);
-        this.main.account.loggedInAccount.wallet.qtumUSD = qtumUSD;
+        const eurekacoinUSD = this.calculateEurekaCoinToUSD(this.main.account.loggedInAccount.wallet.info.balance);
+        this.main.account.loggedInAccount.wallet.eurekacoinUSD = eurekacoinUSD;
 
         chrome.runtime.sendMessage({
-          type: MESSAGE_TYPE.GET_QTUM_USD_RETURN,
-          qtumUSD,
+          type: MESSAGE_TYPE.GET_EUREKACOIN_USD_RETURN,
+          eurekacoinUSD,
         });
       }
     } catch (err) {

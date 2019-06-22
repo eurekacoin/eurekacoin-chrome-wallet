@@ -1,5 +1,5 @@
 import { isFinite } from 'lodash';
-import { validatePrivateKey } from 'qtumjs-wallet';
+import { validatePrivateKey } from 'eurekacoinjs-wallet';
 
 import { TARGET_NAME } from '../constants';
 import { IExtensionMessageData } from '../types';
@@ -27,10 +27,10 @@ export const generateRandomId = (): string => {
 };
 
 /*
-* Validates the Qtum address based on length and starting character.
+* Validates the EurekaCoin address based on length and starting character.
 * @param isMainNet {boolean} Flag if is a mainnet address (or else testnet address).
-* @param address {string} The Qtum address to validate.
-* @return {boolean} Returns if it is a valid Qtum address.
+* @param address {string} The EurekaCoin address to validate.
+* @return {boolean} Returns if it is a valid EurekaCoin address.
 */
 export const isValidAddress = (isMainNet: boolean, address?: string) => {
   if (!address) {

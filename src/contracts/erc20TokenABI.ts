@@ -1,4 +1,4 @@
-const qrc20TokenABI = [
+const erc20TokenABI = [
   {
     'constant': true,
     'inputs': [
@@ -228,4 +228,4 @@ const qrc20TokenABI = [
   },
 ];
 
-export default qrc20TokenABI;
+export default erc20TokenABI;

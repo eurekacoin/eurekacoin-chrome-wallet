@@ -4,16 +4,16 @@
   src: local('Roboto Mono'), url(../fonts/Roboto_Mono/RobotoMono-Regular.ttf) format('ttf');
 }
 
-html.qrypto-extension-modal-wrap {
+html.eurekalite-extension-modal-wrap {
   height: 100%;
 }
 
-.qrypto-extension-modal-wrap body {
+.eurekalite-extension-modal-wrap body {
   position: relative;
   overflow: hidden;
 }
 
-.qrypto-extension-modal-backdrop {
+.eurekalite-extension-modal-backdrop {
   position: absolute;
   top: 0;
   left: 0;
@@ -22,7 +22,7 @@ html.qrypto-extension-modal-wrap {
   background: rgba(0, 0, 0, 0.6);
 }
 
-.qrypto-extension-modal {
+.eurekalite-extension-modal {
   position: absolute;
   z-index: 10000;
 }

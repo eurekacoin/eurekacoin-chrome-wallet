@@ -12,7 +12,7 @@ import SessionController from './sessionController';
 import OnInstallController from './onInstallController';
 import { MESSAGE_TYPE } from '../../constants';
 
-export default class QryptoController {
+export default class EurekaLiteController {
   public crypto: CryptoController;
   public token: TokenController;
   public account: AccountController;

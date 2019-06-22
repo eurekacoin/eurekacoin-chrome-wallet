@@ -14,7 +14,7 @@ const INIT_VALUES = {
   token: undefined,
   amount: '',
   maxAmount: undefined,
-  maxQtumSend: undefined,
+  maxEurekaCoinSend: undefined,
   sendState: SEND_STATE.INITIAL,
   errorMessage: undefined,
   transactionSpeed: TRANSACTION_SPEED.NORMAL,
@@ -31,7 +31,7 @@ export default class SendStore {
   @observable public receiverAddress?: string = INIT_VALUES.receiverAddress;
   @observable public token?: QRCToken = INIT_VALUES.token;
   @observable public amount: number | string = INIT_VALUES.amount;
-  @observable public maxQtumSend?: number = INIT_VALUES.maxQtumSend;
+  @observable public maxEurekaCoinSend?: number = INIT_VALUES.maxEurekaCoinSend;
   public transactionSpeeds: string[] = INIT_VALUES.transactionSpeeds;
   @observable public transactionSpeed?: string = INIT_VALUES.transactionSpeed;
   @observable public gasLimit: number = INIT_VALUES.gasLimitRecommendedAmount;
@@ -46,7 +46,7 @@ export default class SendStore {
   }
   @computed public get receiverFieldError(): string | undefined {
     return isValidAddress(this.app.sessionStore.isMainNet, this.receiverAddress)
-      ? undefined : 'Not a valid Qtum address';
+      ? undefined : 'Not a valid EurekaCoin address';
   }
   @computed public get amountFieldError(): string | undefined {
     return this.maxAmount && isValidAmount(Number(this.amount), this.maxAmount) ? undefined : 'Not a valid amount';
@@ -62,8 +62,8 @@ export default class SendStore {
   }
   @computed public get maxAmount(): number | undefined {
     if (this.token) {
-      if (this.token.symbol === 'QTUM') {
-        return this.maxQtumSend;
+      if (this.token.symbol === 'EUREKACOIN') {
+        return this.maxEurekaCoinSend;
       }
       return this.token!.balance;
     }
@@ -81,13 +81,13 @@ export default class SendStore {
     chrome.runtime.onMessage.addListener(this.handleMessage);
     chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_QRC_TOKEN_LIST }, (response: any) => {
       this.tokens = response;
-      this.tokens.unshift(new QRCToken('Qtum Token', 'QTUM', 8, ''));
+      this.tokens.unshift(new QRCToken('EurekaCoin Token', 'EUREKACOIN', 8, ''));
       this.tokens[0].balance = this.app.sessionStore.info ? this.app.sessionStore.info.balance : undefined;
       this.token = this.tokens[0];
     });
     this.senderAddress = this.app.sessionStore.info ? this.app.sessionStore.info.addrStr : undefined;
     chrome.runtime.sendMessage({
-      type: MESSAGE_TYPE.GET_MAX_QTUM_SEND,
+      type: MESSAGE_TYPE.GET_MAX_EUREKACOIN_SEND,
     });
   }
 
@@ -111,7 +111,7 @@ export default class SendStore {
     }
 
     this.sendState = SEND_STATE.SENDING;
-    if (this.token.symbol === 'QTUM') {
+    if (this.token.symbol === 'EUREKACOIN') {
       chrome.runtime.sendMessage({
         type: MESSAGE_TYPE.SEND_TOKENS,
         receiverAddress: this.receiverAddress,
@@ -142,9 +142,9 @@ export default class SendStore {
         this.sendState = SEND_STATE.INITIAL;
         this.errorMessage = request.error.message;
         break;
-      case MESSAGE_TYPE.GET_MAX_QTUM_SEND_RETURN:
-        const qtumToken = this.tokens[0];
-        this.maxQtumSend = request.maxQtumAmount / (10 ** qtumToken.decimals);
+      case MESSAGE_TYPE.GET_MAX_EUREKACOIN_SEND_RETURN:
+        const eurekacoinToken = this.tokens[0];
+        this.maxEurekaCoinSend = request.maxEurekaCoinAmount / (10 ** eurekacoinToken.decimals);
         break;
       default:
         break;

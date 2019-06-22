@@ -1,6 +1,6 @@
 import { isEmpty, split } from 'lodash';
 
-import QryptoController from '.';
+import EurekaLiteController from '.';
 import IController from './iController';
 import { STORAGE } from '../../constants';
 
@@ -22,7 +22,7 @@ export default class CryptoController extends IController {
   private appSalt?: Uint8Array = INIT_VALUES.appSalt;
   private passwordHash?: string = INIT_VALUES.passwordHash;
 
-  constructor(main: QryptoController) {
+  constructor(main: EurekaLiteController) {
     super('crypto', main);
 
     chrome.storage.local.get([STORAGE.APP_SALT], ({ appSalt }: any) => {

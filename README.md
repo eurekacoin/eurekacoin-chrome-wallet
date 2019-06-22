@@ -1,24 +1,24 @@
-[![Build Status](https://travis-ci.org/bodhiproject/qrypto.svg?branch=master)](https://travis-ci.org/bodhiproject/qrypto)
+[![Build Status](https://travis-ci.org/bodhiproject/eurekalite.svg?branch=master)](https://travis-ci.org/bodhiproject/eurekalite)
 
-## Get Qrypto
-Chome Web Store: https://chrome.google.com/webstore/detail/qrypto/hdmjdgjbehedbnjmljikggbmmbnbmlnd
+## Get EurekaLite
+Chome Web Store: https://chrome.google.com/webstore/detail/eurekalite/hdmjdgjbehedbnjmljikggbmmbnbmlnd
 
 ## Web Dapp Usage
 
-Your dapp can use Qrypto to get information about a user's account status (whether they are logged into Qrypto, their account address, and balance). Qrypto also enables your dapp to listen to a window event for any changes to the user's account status.
-Your dapp can also use qrypto to make callcontract and sendtocontract calls to the blockchain. 
+Your dapp can use EurekaLite to get information about a user's account status (whether they are logged into EurekaLite, their account address, and balance). EurekaLite also enables your dapp to listen to a window event for any changes to the user's account status.
+Your dapp can also use eurekalite to make callcontract and sendtocontract calls to the blockchain. 
 
-### Connecting Qrypto
-To use any of the above functionality, your dapp will first need to initiate a long-lived connection between Qrypto's content script and background script.
-The code to do this is already in Qrypto, your dapp just needs to trigger the function by posting a window message.
-`window.postMessage({ message: { type: 'CONNECT_QRYPTO' }}, '*')`
+### Connecting EurekaLite
+To use any of the above functionality, your dapp will first need to initiate a long-lived connection between EurekaLite's content script and background script.
+The code to do this is already in EurekaLite, your dapp just needs to trigger the function by posting a window message.
+`window.postMessage({ message: { type: 'CONNECT_EUREKALITE' }}, '*')`
 
-This will populate the `window.qrypto` object in your webpage. The `window.qrypto.account` values are automatically updated when a user logs in/out or the account balance changes.
+This will populate the `window.eurekalite` object in your webpage. The `window.eurekalite.account` values are automatically updated when a user logs in/out or the account balance changes.
 
 ```
-// window.qrypto
+// window.eurekalite
 {
-  rpcProvider: QryptoRPCProvider,
+  rpcProvider: EurekaLiteRPCProvider,
   account: {
     loggedIn: true, 
     name: "2", 
@@ -29,50 +29,50 @@ This will populate the `window.qrypto` object in your webpage. The `window.qrypt
 }
 ```
 
-### Refreshing your page when Qrypto is installed or updated
-You will probably want to refresh your dapp webpage when Qrypto is installed or updated. This allows your dapp to rerun
-`window.postMessage({ message: { type: 'CONNECT_QRYPTO' }}, '*')`
-which would have previously failed to do anything while Qrypto was not yet installed. 
-When Qrypto is installed or updated it will send all existing tabs an event message. To have that event message refresh your dapp, add the following event listener.
+### Refreshing your page when EurekaLite is installed or updated
+You will probably want to refresh your dapp webpage when EurekaLite is installed or updated. This allows your dapp to rerun
+`window.postMessage({ message: { type: 'CONNECT_EUREKALITE' }}, '*')`
+which would have previously failed to do anything while EurekaLite was not yet installed. 
+When EurekaLite is installed or updated it will send all existing tabs an event message. To have that event message refresh your dapp, add the following event listener.
 
 ```
-function handleQryptoInstalledOrUpdated(event) {
-  if (event.data.message && event.data.message.type === 'QRYPTO_INSTALLED_OR_UPDATED') {
+function handleEurekaLiteInstalledOrUpdated(event) {
+  if (event.data.message && event.data.message.type === 'EUREKALITE_INSTALLED_OR_UPDATED') {
       // Refresh the page
       window.location.reload()
   }
 }  
-window.addEventListener('message', handleQryptoInstalledOrUpdated, false);
+window.addEventListener('message', handleEurekaLiteInstalledOrUpdated, false);
 ```
 
-### Qrypto User Account Status - Login/Logout
-After connecting Qrypto to your dapp, you can use an event listener to get notified of any changes to the user's account status(logging in/out, change in account balance).
+### EurekaLite User Account Status - Login/Logout
+After connecting EurekaLite to your dapp, you can use an event listener to get notified of any changes to the user's account status(logging in/out, change in account balance).
 
 ```
-function handleQryptoAcctChanged(event) {
-  if (event.data.message && event.data.message.type === "QRYPTO_ACCOUNT_CHANGED") {
+function handleEurekaLiteAcctChanged(event) {
+  if (event.data.message && event.data.message.type === "EUREKALITE_ACCOUNT_CHANGED") {
   	if (event.data.message.payload.error){
   		// handle error
   	}
     console.log("account:", event.data.message.payload.account)
   }
 }
-window.addEventListener('message', handleQryptoAcctChanged, false);
+window.addEventListener('message', handleEurekaLiteAcctChanged, false);
 ```
 
-Note that `window.qrypto.account` will still get updated even if you don't set up this event listener; your Dapp just won't be notified of the changes.
+Note that `window.eurekalite.account` will still get updated even if you don't set up this event listener; your Dapp just won't be notified of the changes.
 
-### Using QryptoProvider
+### Using EurekaLiteProvider
 
-RPC calls can be directly made via `QryptoProvider` which is available to any webpage that connects to Qrypto.
+RPC calls can be directly made via `EurekaLiteProvider` which is available to any webpage that connects to EurekaLite.
 
-**Make sure that `window.qrypto.rpcProvider` is defined before using it.**
+**Make sure that `window.eurekalite.rpcProvider` is defined before using it.**
 
 ```
 // callcontract
 const contractAddress = 'a6dd0b0399dc6162cedde85ed50c6fa4a0dd44f1';
 const data = '06fdde03';
-window.qrypto.rpcProvider.rawCall(
+window.eurekalite.rpcProvider.rawCall(
   'callcontract',
   [contractAddress, data]
 ).then((res) => console.log(res));
@@ -80,23 +80,23 @@ window.qrypto.rpcProvider.rawCall(
 // sendtocontract
 const contractAddress = '49a941c5259e4e6ef9ac4a2a6716c1717ce0ffb6';
 const data = 'd0821b0e0000000000000000000000000000000000000000000000000000000000000001';
-const qtumAmt = 1; // optional. defaults to 0.
+const eurekacoinAmt = 1; // optional. defaults to 0.
 const gasLimit = 200000; // optional. defaults to 200000.
 const gasPrice = 40; // optional. defaults to 40 (satoshi).
-window.qryptoProvider.rawCall(
+window.eurekaliteProvider.rawCall(
   'sendtocontract',
-  [contractAddress, data, qtumAmt, gasLimit, gasPrice],
+  [contractAddress, data, eurekacoinAmt, gasLimit, gasPrice],
 );
 
 // Handle incoming messages
 function handleMessage(message) {
-  if (message.data.target == 'qrypto-inpage') {
+  if (message.data.target == 'eurekalite-inpage') {
     // result: object
     // error: string
     const { result, error } = message.data.message.payload;
     
     if (error) {
-      if (error === 'Not logged in. Please log in to Qrypto first.') {
+      if (error === 'Not logged in. Please log in to EurekaLite first.') {
         // Show an alert dialog that the user needs to login first
         alert(error);
       } else {
@@ -111,19 +111,19 @@ function handleMessage(message) {
 window.addEventListener('message', handleMessage, false);
 ```
 
-### Using Qweb3
-You may also use our Qweb3 convenience library to make `sendtocontract` or `callcontract` calls. See the instructions in the Github repo here: https://github.com/bodhiproject/qweb3.js
+### Using Eweb3
+You may also use our Eweb3 convenience library to make `sendtocontract` or `callcontract` calls. See the instructions in the Github repo here: https://github.com/bodhiproject/eweb3.js
 
 ### Using RegTest
-You can connect Qrypto to regtest. You will need to set the following in your qtumcore-node.json
+You can connect EurekaLite to regtest. You will need to set the following in your eurekacoincore-node.json
 
 ```
-"qtum-explorer": {
+"eurekacoin-explorer": {
   "apiPrefix": "insight-api",
   "routePrefix": "explorer",
   ...
  },
-"qtum-insight-api": {
+"eurekacoin-insight-api": {
   "routePrefix": "insight-api",
   ...
 }  
@@ -135,9 +135,9 @@ You can connect Qrypto to regtest. You will need to set the following in your qt
 2. Open Chrome and load URL: `chrome://extensions`
 3. Turn `Developer mode` on in the top right
 4. At the top, click `Load Unpacked Extension`
-5. Navigate to your `qrypto/dist` folder
+5. Navigate to your `eurekalite/dist` folder
 6. Click `Select`. The extension should now be loaded
-7. Click on the Qrypto logo in your Chrome extensions bar to open
+7. Click on the EurekaLite logo in your Chrome extensions bar to open
 
 ## Security Flow
 **First Time Flow**

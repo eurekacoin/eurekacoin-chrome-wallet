@@ -1,10 +1,10 @@
-import QryptoController from '.';
+import EurekaLiteController from '.';
 
 export default abstract class IController {
-  protected main: QryptoController;
+  protected main: EurekaLiteController;
   private name: string;
 
-  constructor(name: string, main: QryptoController) {
+  constructor(name: string, main: EurekaLiteController) {
     this.name = name;
     this.main = main;
     this.registerController();

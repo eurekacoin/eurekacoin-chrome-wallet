@@ -1,13 +1,13 @@
-import { WalletRPCProvider, Insight } from 'qtumjs-wallet';
+import { WalletRPCProvider, Insight } from 'eurekacoinjs-wallet';
 
-import QryptoController from '.';
+import EurekaLiteController from '.';
 import IController from './iController';
 import { MESSAGE_TYPE, RPC_METHOD } from '../../constants';
 import { IRPCCallResponse } from '../../types';
 import Config from '../../config';
 
 export default class RPCController extends IController {
-  constructor(main: QryptoController) {
+  constructor(main: EurekaLiteController) {
     super('rpc', main);
 
     chrome.runtime.onMessage.addListener(this.handleMessage);

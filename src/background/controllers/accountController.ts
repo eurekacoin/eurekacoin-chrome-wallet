@@ -1,10 +1,10 @@
 import { isEmpty, find, cloneDeep } from 'lodash';
-import { Wallet as QtumWallet } from 'qtumjs-wallet';
+import { Wallet as EurekaCoinWallet } from 'eurekacoinjs-wallet';
 import assert from 'assert';
 
-import QryptoController from '.';
+import EurekaLiteController from '.';
 import IController from './iController';
-import { MESSAGE_TYPE, STORAGE, NETWORK_NAMES, QRYPTO_ACCOUNT_CHANGE } from '../../constants';
+import { MESSAGE_TYPE, STORAGE, NETWORK_NAMES, EUREKALITE_ACCOUNT_CHANGE } from '../../constants';
 import Account from '../../models/Account';
 import Wallet from '../../models/Wallet';
 import { TRANSACTION_SPEED } from '../../constants';
@@ -40,7 +40,7 @@ export default class AccountController extends IController {
   private regtestAccounts: Account[] = INIT_VALUES.regtestAccounts;
   private getInfoInterval?: number = INIT_VALUES.getInfoInterval;
 
-  constructor(main: QryptoController) {
+  constructor(main: EurekaLiteController) {
     super('account', main);
 
     chrome.runtime.onMessage.addListener(this.handleMessage);
@@ -109,7 +109,7 @@ export default class AccountController extends IController {
   * @param accountName The account name for the new wallet account.
   * @param mnemonic The mnemonic to derive the wallet from.
   */
-  public addAccountAndLogin = async (accountName: string, privateKeyHash: string, wallet: QtumWallet) => {
+  public addAccountAndLogin = async (accountName: string, privateKeyHash: string, wallet: EurekaCoinWallet) => {
     this.loggedInAccount = new Account(accountName, privateKeyHash);
     this.loggedInAccount.wallet = new Wallet(wallet);
 
@@ -200,7 +200,7 @@ export default class AccountController extends IController {
     const file = new Blob([mnemonic], {type: 'text/plain'});
     const element = document.createElement('a');
     element.href = URL.createObjectURL(file);
-    element.download = `qrypto_${accountName}_${timestamp}.bak`;
+    element.download = `eurekalite_${accountName}_${timestamp}.bak`;
     element.click();
 
     this.importMnemonic(accountName, mnemonic);
@@ -270,11 +270,11 @@ export default class AccountController extends IController {
 
     /**
      * If we are restoring the session, i.e. the user is already logged in and is only
-     * reopening the popup, we don't need to send the SEND_INPAGE_QRYPTO_ACCOUNT_VALUES event to
-     * the inpage because window.qrypto.account has not changed.
+     * reopening the popup, we don't need to send the SEND_INPAGE_EUREKALITE_ACCOUNT_VALUES event to
+     * the inpage because window.eurekalite.account has not changed.
      */
     if (!isSessionRestore) {
-      this.main.inpageAccount.sendInpageAccountAllPorts(QRYPTO_ACCOUNT_CHANGE.LOGIN);
+      this.main.inpageAccount.sendInpageAccountAllPorts(EUREKALITE_ACCOUNT_CHANGE.LOGIN);
     }
     chrome.runtime.sendMessage({ type: MESSAGE_TYPE.ACCOUNT_LOGIN_SUCCESS });
   }
@@ -293,7 +293,7 @@ export default class AccountController extends IController {
   * Recovers the wallet instance from an encrypted private key.
   * @param privateKeyHash The private key hash to recover the wallet from.
   */
-  private recoverFromPrivateKeyHash(privateKeyHash: string): QtumWallet {
+  private recoverFromPrivateKeyHash(privateKeyHash: string): EurekaCoinWallet {
     assert(privateKeyHash, 'invalid privateKeyHash');
 
     const network = this.main.network.network;
@@ -304,7 +304,7 @@ export default class AccountController extends IController {
     );
   }
 
-  private getPrivateKeyHash(wallet: QtumWallet) {
+  private getPrivateKeyHash(wallet: EurekaCoinWallet) {
     return wallet.toEncryptedPrivateKey(
       this.main.crypto.validPasswordHash,
       AccountController.SCRYPT_PARAMS_PRIV_KEY,
@@ -363,10 +363,10 @@ export default class AccountController extends IController {
       chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_WALLET_INFO_RETURN, info: this.loggedInAccount.wallet.info });
 
       if (sendInpageUpdate) {
-        this.main.inpageAccount.sendInpageAccountAllPorts(QRYPTO_ACCOUNT_CHANGE.BALANCE_CHANGE);
+        this.main.inpageAccount.sendInpageAccountAllPorts(EUREKALITE_ACCOUNT_CHANGE.BALANCE_CHANGE);
       }
 
-      this.updateAndSendMaxQtumAmountToPopup();
+      this.updateAndSendMaxEurekaCoinAmountToPopup();
     }
   }
 
@@ -383,7 +383,7 @@ export default class AccountController extends IController {
 
   /*
   * Executes a sendtoaddress.
-  * @param receiverAddress The address to send Qtum to.
+  * @param receiverAddress The address to send EurekaCoin to.
   * @param amount The amount to send.
   */
   private sendTokens = async (receiverAddress: string, amount: number, transactionSpeed: TRANSACTION_SPEED) => {
@@ -402,7 +402,7 @@ export default class AccountController extends IController {
         [TRANSACTION_SPEED.NORMAL]: 500,
         [TRANSACTION_SPEED.SLOW]: 500,
       };
-      const feeRate = rates[transactionSpeed]; // satoshi/byte; 500 satoshi/byte == .005 QTUM/KB
+      const feeRate = rates[transactionSpeed]; // satoshi/byte; 500 satoshi/byte == .005 EUREKACOIN/KB
       if (!feeRate) {
         throw Error('feeRate not set');
       }
@@ -416,23 +416,23 @@ export default class AccountController extends IController {
   }
 
   /**
-   * We update the maxQtum amount under 2 scnearios
-   * 1 - When wallet.info has been updated because a new balance has a new maxQtumSend
-   * 2 - Whenever the maxQtumSend is requested, because even if the balance does not
-   * change, the available UTXOs can change(which causes a change in maxQtumSend).
-   * For instance when a user sends Qtum, but that transaction has not confirmed yet,
-   * the balance will not change, but calcMaxQtumSend is able to account for those
-   * unconfirmed UTXOs and update maxQtumSend accordingly.
+   * We update the maxEurekaCoin amount under 2 scnearios
+   * 1 - When wallet.info has been updated because a new balance has a new maxEurekaCoinSend
+   * 2 - Whenever the maxEurekaCoinSend is requested, because even if the balance does not
+   * change, the available UTXOs can change(which causes a change in maxEurekaCoinSend).
+   * For instance when a user sends EurekaCoin, but that transaction has not confirmed yet,
+   * the balance will not change, but calcMaxEurekaCoinSend is able to account for those
+   * unconfirmed UTXOs and update maxEurekaCoinSend accordingly.
    */
-  private updateAndSendMaxQtumAmountToPopup = async () => {
+  private updateAndSendMaxEurekaCoinAmountToPopup = async () => {
     if (!this.loggedInAccount || !this.loggedInAccount.wallet || !this.loggedInAccount.wallet.qjsWallet) {
       throw Error('Cannot calculate max balance with no wallet instance.');
     }
 
-    const calcMQSPr = this.loggedInAccount.wallet.calcMaxQtumSend(this.main.network.networkName);
+    const calcMQSPr = this.loggedInAccount.wallet.calcMaxEurekaCoinSend(this.main.network.networkName);
     calcMQSPr.then(() => {
-      chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_MAX_QTUM_SEND_RETURN,
-        maxQtumAmount: this.loggedInAccount!.wallet!.maxQtumSend });
+      chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_MAX_EUREKACOIN_SEND_RETURN,
+        maxEurekaCoinAmount: this.loggedInAccount!.wallet!.maxEurekaCoinSend });
     });
   }
 
@@ -482,15 +482,15 @@ export default class AccountController extends IController {
           sendResponse(this.loggedInAccount && this.loggedInAccount.wallet
             ? this.loggedInAccount.wallet.info : undefined);
           break;
-        case MESSAGE_TYPE.GET_QTUM_USD:
+        case MESSAGE_TYPE.GET_EUREKACOIN_USD:
           sendResponse(this.loggedInAccount && this.loggedInAccount.wallet
-            ? this.loggedInAccount.wallet.qtumUSD : undefined);
+            ? this.loggedInAccount.wallet.eurekacoinUSD : undefined);
           break;
         case MESSAGE_TYPE.VALIDATE_WALLET_NAME:
           sendResponse(this.isWalletNameTaken(request.name));
           break;
-        case MESSAGE_TYPE.GET_MAX_QTUM_SEND:
-          this.updateAndSendMaxQtumAmountToPopup();
+        case MESSAGE_TYPE.GET_MAX_EUREKACOIN_SEND:
+          this.updateAndSendMaxEurekaCoinAmountToPopup();
           break;
         default:
           break;
