@@ -7,7 +7,7 @@ import EurekaLiteController from '.';
 import IController from './iController';
 import { MESSAGE_TYPE, STORAGE, NETWORK_NAMES } from '../../constants';
 import QRCToken from '../../models/QRCToken';
-import erc20TokenABI from '../../contracts/erc20TokenABI';
+import erc223TokenABI from '../../contracts/erc223TokenABI';
 import mainnetTokenList from '../../contracts/mainnetTokenList';
 import testnetTokenList from '../../contracts/testnetTokenList';
 import regtestTokenList from '../../contracts/regtestTokenList';
@@ -105,7 +105,7 @@ export default class TokenController extends IController {
 
     const methodName = 'balanceOf';
     const data = eweb3.encoder.constructData(
-      erc20TokenABI,
+      erc223TokenABI,
       methodName,
       [this.main.account.loggedInAccount.wallet.qjsWallet.address],
     );
@@ -118,7 +118,7 @@ export default class TokenController extends IController {
     }
 
     // Decode result
-    const decodedRes = eweb3.decoder.decodeCall(result, erc20TokenABI, methodName);
+    const decodedRes = eweb3.decoder.decodeCall(result, erc223TokenABI, methodName);
     const bnBal = decodedRes!.executionResult.formattedOutput[0]; // Returns as a BN instance
     const bigNumberBal = new BigNumber(bnBal.toString(10)); // Convert to BigNumber instance
     const balance = bigNumberBal.dividedBy(new BigNumber(10 ** token.decimals)).toNumber(); // Convert to regular denomination
@@ -142,38 +142,38 @@ export default class TokenController extends IController {
     /*
     * Further contract address validation - if the addr provided does not have name,
     * symbol, and decimals fields, it will throw an error as it is not a valid
-    * erc20TokenContractAddr
+    * erc223TokenContractAddr
     */
     try {
       // Get name
       let methodName = 'name';
-      let data = eweb3.encoder.constructData(erc20TokenABI, methodName, []);
+      let data = eweb3.encoder.constructData(erc223TokenABI, methodName, []);
       let { result, error }: IRPCCallResponse =
         await this.main.rpc.callContract(generateRequestId(), [contractAddress, data]);
       if (error) {
         throw Error(error);
       }
-      result = eweb3.decoder.decodeCall(result, erc20TokenABI, methodName) as Insight.IContractCall;
+      result = eweb3.decoder.decodeCall(result, erc223TokenABI, methodName) as Insight.IContractCall;
       const name = result.executionResult.formattedOutput[0];
 
       // Get symbol
       methodName = 'symbol';
-      data = eweb3.encoder.constructData(erc20TokenABI, methodName, []);
+      data = eweb3.encoder.constructData(erc223TokenABI, methodName, []);
       ({ result, error } = await this.main.rpc.callContract(generateRequestId(), [contractAddress, data]));
       if (error) {
         throw Error(error);
       }
-      result = eweb3.decoder.decodeCall(result, erc20TokenABI, methodName) as Insight.IContractCall;
+      result = eweb3.decoder.decodeCall(result, erc223TokenABI, methodName) as Insight.IContractCall;
       const symbol = result.executionResult.formattedOutput[0];
 
       // Get decimals
       methodName = 'decimals';
-      data = eweb3.encoder.constructData(erc20TokenABI, methodName, []);
+      data = eweb3.encoder.constructData(erc223TokenABI, methodName, []);
       ({ result, error } = await this.main.rpc.callContract(generateRequestId(), [contractAddress, data]));
       if (error) {
         throw Error(error);
       }
-      result = eweb3.decoder.decodeCall(result, erc20TokenABI, methodName) as Insight.IContractCall;
+      result = eweb3.decoder.decodeCall(result, erc223TokenABI, methodName) as Insight.IContractCall;
       const decimals = result.executionResult.formattedOutput[0];
 
       if (name && symbol && decimals) {
@@ -212,7 +212,7 @@ export default class TokenController extends IController {
                                 gasLimit: number, gasPrice: number ) => {
     // bn.js does not handle decimals well (Ex: BN(1.2) => 1 not 1.2) so we use BigNumber
     const bnAmount = new BigNumber(amount).times(new BigNumber(10 ** token.decimals));
-    const data = eweb3.encoder.constructData(erc20TokenABI, 'transfer', [receiverAddress, bnAmount]);
+    const data = eweb3.encoder.constructData(erc223TokenABI, 'transfer', [receiverAddress, bnAmount]);
     const args = [token.address, data, null, gasLimit, gasPrice];
     const { error } = await this.main.rpc.sendToContract(generateRequestId(), args);
 

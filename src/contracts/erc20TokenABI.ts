@@ -1,4 +1,4 @@
-const erc20TokenABI = [
+const erc223TokenABI = [
   {
     'constant': true,
     'inputs': [
@@ -228,4 +228,4 @@ const erc20TokenABI = [
   },
 ];
 
-export default erc20TokenABI;
+export default erc223TokenABI;
