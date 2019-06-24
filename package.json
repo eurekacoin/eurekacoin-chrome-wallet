@@ -66,16 +66,17 @@
     "chrome-call": "^3.0.0",
     "classnames": "^2.2.6",
     "deep-equal": "^1.0.1",
+    "eurekacoinjs-wallet": "git://github.com/eurekacoin/eurekacoinjs-wallet.git#master",
+    "eweb3": "git://github.com/eurekacoin/eweb3.js.git#master",
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.3",
     "mobx-react-router": "^4.0.4",
     "moment": "^2.22.2",
     "qrcode.react": "^0.8.0",
-    "eurekacoinjs-wallet": "git://github.com/eurekacoin/eurekacoinjs-wallet.git#master",
-    "eweb3": "git://github.com/eurekacoin/eweb3.js.git#master",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "secp256k1": "^3.5.0",
-    "wif": "^2.0.6"
+    "wif": "^2.0.6",
+    "yarn": "^1.16.0"
   }
 }
