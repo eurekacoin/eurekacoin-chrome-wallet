@@ -48,7 +48,9 @@ export default class SessionStore {
       this.loggedInAccountName = response;
     });
     chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_WALLET_INFO }, (response: any) => this.info = response);
-    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_EUREKACOIN_USD }, (response: any) => this.eurekacoinUSD = response);
+    chrome.runtime.sendMessage({
+      type: MESSAGE_TYPE.GET_EUREKACOIN_USD,
+      }, (response: any) => this.eurekacoinUSD = response);
   }
 
   @action
