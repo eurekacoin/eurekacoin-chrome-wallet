@@ -54,7 +54,7 @@ export default class ExternalController extends IController {
       // const jsonObj = await axios.get('https://api.coinmarketcap.com/v2/ticker/1684/');
       // this.eurekacoinPriceUSD = jsonObj.data.data.quotes.USD.price;
       const jsonObj = await axios.get('https://api.coinpaprika.com/v1/ticker/erk-eureka-coin');
-      this.eurekacoinPriceUSD = jsonObj.data.data.quotes.USD.price;
+      this.eurekacoinPriceUSD = jsonObj.data.price_usd;
 
       if (this.main.account.loggedInAccount
         && this.main.account.loggedInAccount.wallet
